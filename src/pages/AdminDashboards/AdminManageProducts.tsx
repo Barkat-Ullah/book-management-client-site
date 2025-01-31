@@ -1,66 +1,75 @@
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useAddProductMutation } from "../../redux/features/product/productManagementApi";
 import { useState } from "react";
 import { useAppSelector } from "../../redux/hooks";
 import { useCurrentUser } from "../../redux/features/Auth/authSlice";
 
-const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING;
+const image_hosting_key: string = import.meta.env.VITE_IMAGE_HOSTING as string;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
+// ✅ Define Form Data Type
+type TProductFormValues = {
+  title: string;
+  price: number;
+  category: string;
+  description: string;
+  quantity: number;
+  image: FileList;
+};
+
 const AdminManageProducts = () => {
-  const user = useAppSelector(useCurrentUser)
+  const user = useAppSelector(useCurrentUser);
 
   const [addProduct, { isLoading, error }] = useAddProductMutation();
-  const [uploading, setUploading] = useState(false);
+  const [uploading, setUploading] = useState<boolean>(false);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm();
+  } = useForm<TProductFormValues>();
 
-const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-  setUploading(true);
+  const onSubmit: SubmitHandler<TProductFormValues> = async (data) => {
+    setUploading(true);
 
- 
-  const formData = new FormData();
-  formData.append("image", data.image[0]);
+    const formData = new FormData();
+    formData.append("image", data.image[0]);
 
-  try {
-    const res = await fetch(image_hosting_api, {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const res = await fetch(image_hosting_api, {
+        method: "POST",
+        body: formData,
+      });
 
-    const imgData = await res.json();
-    if (imgData.success) {
-      const imageUrl = imgData.data.url;
+      const imgData: { success: boolean; data: { url: string } } =
+        await res.json();
+      if (imgData.success) {
+        const imageUrl: string = imgData.data.url;
 
-      // ✅ Ensure correct data types and required fields
-      const formattedData = {
-        title: data.title,
-        author: user?.id || "", 
-        price: Number(data.price), 
-        category: data.category,
-        description: data.description,
-        quantity: Number(data.quantity),
-        image: imageUrl,
-      };
+        // ✅ Ensure correct data types and required fields
+        const formattedData = {
+          title: data.title,
+          author: user?.id || "",
+          price: Number(data.price),
+          category: data.category,
+          description: data.description,
+          quantity: Number(data.quantity),
+          image: imageUrl,
+        };
 
-      // ✅ Send product data to backend
-      await addProduct(formattedData);
-      reset();
-    } else {
-      console.error("Image upload failed");
+        // ✅ Send product data to backend
+        await addProduct(formattedData);
+        reset();
+      } else {
+        console.error("Image upload failed");
+      }
+    } catch (err) {
+      console.error("Error uploading image", err);
+    } finally {
+      setUploading(false);
     }
-  } catch (err) {
-    console.error("Error uploading image", err);
-  } finally {
-    setUploading(false);
-  }
-};
-
+  };
 
   return (
     <div className="p-5 max-w-lg mx-auto border rounded-md shadow-md">
@@ -102,7 +111,6 @@ const onSubmit: SubmitHandler<FieldValues> = async (data) => {
             <option value="Fiction">Fiction</option>
             <option value="Science">Science</option>
             <option value="Poetry">Poetry</option>
-           
           </select>
           <p className="text-red-500">{errors.category?.message}</p>
         </div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
 import {
   Button,
@@ -8,43 +9,47 @@ import {
   TableProps,
   message,
 } from "antd";
-import { Link } from "react-router-dom";
 import { TUser } from "../../types/global";
 import {
   useChangeUserStatusMutation,
   useGetAllUserQuery,
 } from "../../redux/features/Auth/authApi";
 
-export type TTableData = Pick<TUser, "name" | "email"> & {
-  status: string;
+// Define Table Data Type
+export type TTableData = Pick<TUser, "name" | "email" | "status"> & {
+  key: string; // Add key as required by Ant Design Table
 };
 
+// Define the type for selected user
+type TSelectedUser = {
+  _id: string;
+  name: string;
+  status: string;
+} | null;
+
 const AdminManageUsers = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<{
-    _id: string;
-    status: string;
-  } | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedStudent, setSelectedStudent] = useState<TSelectedUser>(null);
 
   const { data: AdminManageUsers, isFetching } = useGetAllUserQuery(undefined);
-
   const [changeUserStatus, { isLoading: isStatusChanging }] =
     useChangeUserStatusMutation();
 
-  const tableData = AdminManageUsers?.data?.map(
-    ({ _id, name, email, status }) => ({
-      key: _id,
-      email,
-      name,
-      status,
-    })
-  );
+  const tableData: TTableData[] =
+    AdminManageUsers?.data?.map((user: TUser) => ({
+      key: user._id, 
+      email: user.email,
+      name: user.name,
+      status: user.status,
+    })) || [];
 
+
+  // Handle status change
   const handleChangeStatus = async () => {
     if (selectedStudent) {
       try {
         const newStatus =
-          selectedStudent.status === "de-active" ? "active" : "de-active"; // Toggle between active and de-active
+          selectedStudent.status === "de-active" ? "active" : "de-active";
         await changeUserStatus({
           id: selectedStudent._id,
           status: newStatus,
@@ -62,6 +67,7 @@ const AdminManageUsers = () => {
     }
   };
 
+  // Define Table Columns
   const columns: TableColumnsType<TTableData> = [
     {
       title: "Name",
@@ -80,8 +86,8 @@ const AdminManageUsers = () => {
     },
     {
       title: "Action",
-      key: "x",
-      render: (record) => (
+      key: "action",
+      render: (record: TTableData) => (
         <Space>
           <Button
             onClick={() => {
@@ -100,6 +106,7 @@ const AdminManageUsers = () => {
     },
   ];
 
+  // Table onChange function
   const onChange: TableProps<TTableData>["onChange"] = (
     _pagination,
     _filters,

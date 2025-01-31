@@ -65,7 +65,7 @@ const AdminManageOrders = () => {
             Mark as Completed
           </Button>
           <Button
-            type="danger"
+            type="primary"
             icon={<MdDeleteOutline />}
             onClick={() => handleDelete(record._id)}
           >

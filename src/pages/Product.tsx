@@ -1,19 +1,17 @@
 import { Link } from "react-router";
 import { useGetProductQuery } from "../redux/features/product/productManagementApi";
-import moment from "moment"; // Install this using `npm install moment` if not already installed
-import Skeleton from "./Skeleton";
+import moment from "moment";
 import { useState } from "react";
 import { TQueryParam } from "../types/global";
 import { Input, Pagination } from "antd";
 
 const Product = () => {
-  const [params, setParams] = useState<TQueryParam[] | undefined>([]);
+  const [params, setParams] = useState<TQueryParam[] >([]);
   const [page, setPage] = useState(1);
   const [searchText, setSearchText] = useState("");
   const {
     data: productData,
-    isFetching,
-    isLoading,
+   
   } = useGetProductQuery([
     { name: "searchTerm", value: searchText },
     { name: "page", value: page },
@@ -21,6 +19,7 @@ const Product = () => {
   ]);
 
   const metaData = productData?.data.meta;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onChange = (
     _pagination: any,
     filters: any,

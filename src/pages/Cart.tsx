@@ -7,6 +7,7 @@ import {
   useRemoveItemFromCartMutation,
 } from "../redux/features/product/cartApi";
 import { useCreateOrderMutation } from "../redux/features/order/orderManagementApi";
+import { Key } from "react";
 
 export default function Cart() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function Cart() {
   const [clearCart] = useClearCartMutation();
 
   const { register, handleSubmit } = useForm({
-    defaultValues: cart.reduce((acc, item) => {
+    defaultValues: cart.reduce((acc: { [x: string]: number; }, item: { productId: { _id: any; }; }) => {
       acc[`quantity-${item.productId._id}`] = 1;
       return acc;
     }, {}),
@@ -27,7 +28,7 @@ export default function Cart() {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const orderData = {
       userId: userDetails?._id,
-      items: cart.map((item) => ({
+      items: cart.map((item: { productId: { _id: any; price: any; }; }) => ({
         productId: item.productId._id,
         quantity: parseInt(data[`quantity-${item.productId._id}`], 10),
         price: item.productId.price,
@@ -87,7 +88,7 @@ export default function Cart() {
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        {cart.map((item, index) => (
+        {cart.map((item: { _id: Key | null | undefined; productId: { image: any; title: any; price: any; _id: string; }; }, index: number) => (
           <div key={item._id} className="border-t border-gray-200 pt-6">
             <div className="flex">
               <div className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-gray-200">

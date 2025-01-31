@@ -10,10 +10,8 @@ import EInput from "../../components/Form/EInput";
 const { Title, Text, Link } = Typography;
 
 const Login = () => {
- 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const [login] = useLoginUserMutation();
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
@@ -26,15 +24,19 @@ const Login = () => {
         localStorage.setItem("token", token);
 
         message.success("Login successful!");
-
         navigate("/");
       } else {
         message.error("Login failed. Please try again.");
       }
     } catch (error) {
-      message.error(
-        error?.message || "Something went wrong. Please try again."
-      );
+      // Check if the error is an instance of Error
+      if (error instanceof Error) {
+        message.error(
+          error.message || "Something went wrong. Please try again."
+        );
+      } else {
+        message.error("Something went wrong. Please try again.");
+      }
     }
   };
 

@@ -1,7 +1,14 @@
 import { baseApi } from "../../api/baseApi";
 
+
+
 const orderApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getOrders: builder.query({
+      query: () => "/orders",
+      // Provides the tag for the Orders list
+      providesTags: ["Orders"],
+    }),
     createOrder: builder.mutation({
       query: (userInfo) => ({
         url: "/orders",
@@ -9,14 +16,7 @@ const orderApi = baseApi.injectEndpoints({
         body: userInfo,
       }),
       // Tag the cache for invalidation after creating an order
-      providesTags: (result) =>
-        result ? [{ type: "Orders", id: result._id }] : [],
-    }),
-
-    getOrders: builder.query({
-      query: () => "/orders",
-      // Provides the tag for the Orders list
-      providesTags: ["Orders"],
+      invalidatesTags: [{ type: "Orders", id: "LIST" }],
     }),
 
     updateOrderStatus: builder.mutation({
@@ -26,7 +26,7 @@ const orderApi = baseApi.injectEndpoints({
         body: { status },
       }),
       // Invalidates the cache for the Orders list when updating order status
-      invalidatesTags: [{ type: "Orders" }],
+      invalidatesTags: ["Orders"],
     }),
 
     deleteOrder: builder.mutation({
@@ -35,7 +35,7 @@ const orderApi = baseApi.injectEndpoints({
         method: "DELETE",
       }),
       // Invalidates the cache for the Orders list when deleting an order
-      invalidatesTags: [{ type: "Orders" }],
+      invalidatesTags: ["Orders"],
     }),
 
     verifyOrder: builder.query({
@@ -45,17 +45,17 @@ const orderApi = baseApi.injectEndpoints({
         method: "GET",
       }),
       // Optionally, you can tag the specific order for cache invalidation
-      providesTags: (result) =>
+      providesTags: (result: { _id: string } | undefined) =>
         result ? [{ type: "Orders", id: result._id }] : [],
     }),
+
     getUserOrders: builder.query({
       query: (userId) => `/orders/user/${userId}`,
       providesTags: (result) =>
         result ? [{ type: "Orders", id: "LIST" }] : [],
     }),
   }),
-  })
-
+});
 
 export const {
   useCreateOrderMutation,
@@ -63,5 +63,5 @@ export const {
   useUpdateOrderStatusMutation,
   useDeleteOrderMutation,
   useVerifyOrderQuery,
-  useGetUserOrdersQuery
+  useGetUserOrdersQuery,
 } = orderApi;

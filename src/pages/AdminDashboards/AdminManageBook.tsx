@@ -21,10 +21,30 @@ import {
 } from "../../redux/features/product/productManagementApi";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 
+type Product = {
+  key: string;
+  title: string;
+  price: number;
+  category: string;
+  quantity: number;
+  image: string;
+  description?: string;
+};
+type APIProduct = {
+  _id: string;
+  title: string;
+  price: number;
+  category: string;
+  quantity: number;
+  image: string;
+  description?: string;
+};
+
+
 const AdminManageBook = () => {
-  const [params, setParams] = useState<TQueryParam[] | undefined>([]);
-  const [page, setPage] = useState(1);
-  const [searchText, setSearchText] = useState("");
+const [params, setParams] = useState<TQueryParam[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [searchText, setSearchText] = useState<string>("");
   const { data: productData, isFetching } = useGetProductQuery([
     { name: "searchTerm", value: searchText },
     { name: "page", value: page },
@@ -34,8 +54,8 @@ const AdminManageBook = () => {
   const metaData = productData?.data.meta;
   const [updateProduct] = useUpdateProductMutation();
   const [deleteProduct] = useDeleteProductMutation();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [form] = Form.useForm();
 
   // ✅ Handle Delete Product
@@ -50,7 +70,7 @@ const AdminManageBook = () => {
   };
 
   // ✅ Open Modal for Update
-  const showUpdateModal = (product: any) => {
+  const showUpdateModal = (product: Product) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
     form.setFieldsValue({
@@ -68,7 +88,9 @@ const AdminManageBook = () => {
     try {
       const updatedValues = await form.validateFields();
 
-      await updateProduct({ id: selectedProduct.key, data: updatedValues });
+      if (selectedProduct) {
+        await updateProduct({ id: selectedProduct.key, data: updatedValues });
+      }
 
       message.success("Product updated successfully!");
       setIsModalOpen(false);
@@ -79,19 +101,19 @@ const AdminManageBook = () => {
   };
 
   // ✅ Format Table Data
-  const tableData = productData?.data?.result?.map(
-    ({ _id, title, price, category, quantity, image }) => ({
-      key: _id,
-      title,
-      price,
-      category,
-      quantity,
-      image,
-    })
-  );
+ const tableData: Product[] | undefined = productData?.data?.result?.map(
+   (product: APIProduct) => ({
+     key: product._id,
+     title: product.title,
+     price: product.price,
+     category: product.category,
+     quantity: product.quantity,
+     image: product.image,
+   })
+ );
 
   // ✅ Define Table Columns
-  const columns: TableColumnsType<any> = [
+  const columns: TableColumnsType<Product> = [
     {
       title: "Image",
       key: "image",
@@ -136,7 +158,7 @@ const AdminManageBook = () => {
     },
   ];
 
-  const onChange: TableProps<any>["onChange"] = (
+  const onChange: TableProps<Product>["onChange"] = (
     _pagination,
     filters,
     _sorter,
@@ -157,21 +179,17 @@ const AdminManageBook = () => {
   };
 
   const handleSearch = (value: string) => {
-    console.log(value);
     setSearchText(value);
     setPage(1);
   };
 
   return (
     <>
-      {/* ✅ Search Bar */}
       <Input.Search
         placeholder="Search by Title"
         enterButton
         onSearch={handleSearch}
       />
-
-      {/* ✅ Table */}
       <Table
         scroll={{ x: 800 }}
         loading={isFetching}
@@ -182,14 +200,11 @@ const AdminManageBook = () => {
       />
       <Pagination
         style={{ marginTop: "10px" }}
-        align="end"
         current={page}
         onChange={(value) => setPage(value)}
         pageSize={metaData?.limit}
         total={metaData?.total}
       />
-
-      {/* ✅ Update Product Modal */}
       <Modal
         title="Update Product"
         open={isModalOpen}
@@ -224,30 +239,6 @@ const AdminManageBook = () => {
               <Select.Option value="Poetry">Poetry</Select.Option>
               <Select.Option value="Religious">Religious</Select.Option>
             </Select>
-          </Form.Item>
-       
-
-          <Form.Item
-            name="quantity"
-            label="Quantity"
-            rules={[{ required: true, message: "Quantity is required!" }]}
-          >
-            <Input type="number" />
-          </Form.Item>
-          {/* ✅ New Fields for Image and Description */}
-          <Form.Item
-            name="image"
-            label="Image URL"
-            rules={[{ required: true, message: "Image URL is required!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: "Description is required!" }]}
-          >
-            <Input.TextArea rows={4} />
           </Form.Item>
         </Form>
       </Modal>

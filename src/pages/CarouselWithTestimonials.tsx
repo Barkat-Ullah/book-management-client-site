@@ -1,8 +1,11 @@
 import { useEffect } from "react";
 import Glide from "@glidejs/glide";
 
-// Simple Star Icon Component
-const StarIcon = ({ filled }) => (
+interface StarIconProps {
+  filled: boolean;
+}
+
+const StarIcon: React.FC<StarIconProps> = ({ filled }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -19,8 +22,7 @@ const StarIcon = ({ filled }) => (
   </svg>
 );
 
-// Simple Quote Icon Component
-const QuoteIcon = () => (
+const QuoteIcon: React.FC = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -31,8 +33,21 @@ const QuoteIcon = () => (
   </svg>
 );
 
-// Reusable Testimonial Card Component
-const TestimonialCard = ({ testimonial, rating, author, role, image }) => (
+interface TestimonialProps {
+  testimonial: string;
+  rating: number;
+  author: string;
+  role: string;
+  image: string;
+}
+
+const TestimonialCard: React.FC<TestimonialProps> = ({
+  testimonial,
+  rating,
+  author,
+  role,
+  image,
+}) => (
   <li>
     <div className="h-full w-full">
       <div className="h-full overflow-hidden rounded bg-white text-slate-500 shadow-2xl shadow-slate-200">
@@ -71,7 +86,34 @@ const TestimonialCard = ({ testimonial, rating, author, role, image }) => (
   </li>
 );
 
-export default function CarouselTestimonial() {
+const testimonials: TestimonialProps[] = [
+  {
+    testimonial:
+      "The Library's collection is extraordinary. The rare book section transported me through centuries of literary history. The staff's expertise and dedication to preservation is remarkable.",
+    rating: 5,
+    author: "Sarah Johnson",
+    role: "Literary Historian",
+    image: "https://i.ibb.co/N30gbs2/placeholder.jpg",
+  },
+  {
+    testimonial:
+      "The digital catalog system is intuitive and comprehensive. Finding specific editions or exploring new additions to the collection has never been easier.",
+    rating: 5,
+    author: "David Chen",
+    role: "Digital Archivist",
+    image: "https://i.ibb.co/N30gbs2/placeholder.jpg",
+  },
+  {
+    testimonial:
+      "The reading room atmosphere is perfect for deep study and research. The restoration work being done on ancient texts is fascinating to observe.",
+    rating: 5,
+    author: "Emily Martinez",
+    role: "Book Conservator",
+    image: "https://i.ibb.co/N30gbs2/placeholder.jpg",
+  },
+];
+
+const CarouselTestimonial: React.FC = () => {
   useEffect(() => {
     const slider = new Glide(".glide-08", {
       type: "carousel",
@@ -101,33 +143,6 @@ export default function CarouselTestimonial() {
     };
   }, []);
 
-  const testimonials = [
-    {
-      testimonial:
-        "The Library's collection is extraordinary. The rare book section transported me through centuries of literary history. The staff's expertise and dedication to preservation is remarkable.",
-      rating: 5,
-      author: "Sarah Johnson",
-      role: "Literary Historian",
-      image: "https://i.ibb.co/N30gbs2/placeholder.jpg",
-    },
-    {
-      testimonial:
-        "The digital catalog system is intuitive and comprehensive. Finding specific editions or exploring new additions to the collection has never been easier.",
-      rating: 5,
-      author: "David Chen",
-      role: "Digital Archivist",
-      image: "https://i.ibb.co/N30gbs2/placeholder.jpg",
-    },
-    {
-      testimonial:
-        "The reading room atmosphere is perfect for deep study and research. The restoration work being done on ancient texts is fascinating to observe.",
-      rating: 5,
-      author: "Emily Martinez",
-      role: "Book Conservator",
-      image: "https://i.ibb.co/N30gbs2/placeholder.jpg",
-    },
-  ];
-
   return (
     <div className="glide-08 relative max-w-7xl mx-auto">
       <h1 className="text-xl font-semibold ml-2 py-4 text-black capitalize lg:text-3xl">
@@ -137,14 +152,7 @@ export default function CarouselTestimonial() {
       <div data-glide-el="track">
         <ul className="whitespace-no-wrap flex-no-wrap [backface-visibility: hidden] [transform-style: preserve-3d] [touch-action: pan-Y] [will-change: transform] relative flex w-full overflow-hidden p-0 pb-12">
           {testimonials.map((testimonial, index) => (
-            <TestimonialCard
-              key={index}
-              testimonial={testimonial.testimonial}
-              rating={testimonial.rating}
-              author={testimonial.author}
-              role={testimonial.role}
-              image={testimonial.image}
-            />
+            <TestimonialCard key={index} {...testimonial} />
           ))}
         </ul>
       </div>
@@ -153,7 +161,7 @@ export default function CarouselTestimonial() {
         className="-mt-6 flex w-full items-center justify-center gap-2"
         data-glide-el="controls[nav]"
       >
-        {[...Array(testimonials.length)].map((_, index) => (
+        {testimonials.map((_, index) => (
           <button
             key={index}
             className="group p-4"
@@ -166,4 +174,6 @@ export default function CarouselTestimonial() {
       </div>
     </div>
   );
-}
+};
+
+export default CarouselTestimonial;

@@ -1,8 +1,14 @@
-
 import { FaFacebook, FaGithub, FaReddit } from "react-icons/fa";
 
+// Define TypeScript types
+interface TeamMemberProps {
+  name: string;
+  role: string;
+  imgSrc: string;
+}
+
 // Reusable TeamMember component
-const TeamMember = ({ name, role, imgSrc }) => {
+const TeamMember: React.FC<TeamMemberProps> = ({ name, role, imgSrc }) => {
   return (
     <div className="flex flex-col items-center p-8 transition-colors duration-300 transform cursor-pointer group hover:bg-blue-600 rounded-xl">
       <img
@@ -48,9 +54,9 @@ const TeamMember = ({ name, role, imgSrc }) => {
   );
 };
 
-const Team = () => {
+const Team: React.FC = () => {
   // Team members data
-  const teamMembers = [
+  const teamMembers: TeamMemberProps[] = [
     {
       name: "Arthur Melo",
       role: "Design Director",
@@ -74,30 +80,6 @@ const Team = () => {
       role: "Full Stack Developer",
       imgSrc:
         "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80",
-    },
-    {
-      name: "Mia",
-      role: "Graphic Designer",
-      imgSrc:
-        "https://images.unsplash.com/photo-1499470932971-a90681ce8530?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-    },
-    {
-      name: "Junior Reis",
-      role: "Products Manager",
-      imgSrc:
-        "https://images.unsplash.com/photo-1608174386344-80898cec6beb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-    },
-    {
-      name: "Joseph Gonzalez",
-      role: "Software Engineer",
-      imgSrc:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
-    },
-    {
-      name: "Emma Doe",
-      role: "Content Writer",
-      imgSrc:
-        "https://images.unsplash.com/photo-1521488741203-dcc320950ce5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80",
     },
   ];
 
