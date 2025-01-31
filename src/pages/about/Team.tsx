@@ -1,4 +1,4 @@
-import React from "react";
+
 import { FaFacebook, FaGithub, FaReddit } from "react-icons/fa";
 
 // Reusable TeamMember component

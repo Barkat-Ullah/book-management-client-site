@@ -4,7 +4,7 @@ const products = [
   {
     id: 1,
     name: "Introduction to C programming",
-    href: "#",
+    href: " ",
     price: "Tk 500",
     imageSrc: "https://i.ibb.co.com/t4BZv1C/Rectangle-2-2.png",
     imageAlt: "A book titled 'Introduction to Algorithms' with a plain cover.",
@@ -12,7 +12,7 @@ const products = [
   {
     id: 2,
     name: "Introduction to Algorithms",
-    href: "#",
+    href: " ",
     price: "Tk 550",
     imageSrc: "https://i.ibb.co.com/7nyz47y/Rectangle-2-3.png",
     imageAlt: "A book titled 'Clean Code' with a blue cover sitting on a desk.",
@@ -20,7 +20,7 @@ const products = [
   {
     id: 3,
     name: "The C++ for DSA",
-    href: "#",
+    href: " ",
     price: "Tk 55",
     imageSrc: "https://i.ibb.co.com/NmDyGJB/Rectangle-2-4.png",
     imageAlt: "A book titled 'The Pragmatic Programmer' placed on a table.",
@@ -28,7 +28,7 @@ const products = [
   {
     id: 4,
     name: "Basic Data Structure",
-    href: "#",
+    href: " ",
     price: "Tk 455",
     imageSrc: "https://i.ibb.co.com/XsXnsHX/Rectangle-3.png",
     imageAlt:
@@ -37,7 +37,7 @@ const products = [
   {
     id: 5,
     name: "Introduction to OOP Python",
-    href: "#",
+    href: " ",
     price: "Tk 555",
     imageSrc: "https://i.ibb.co.com/0fPtSGR/Rectangle-2.png",
     imageAlt: "A book titled 'Design Patterns' with a classic red cover.",
@@ -45,7 +45,7 @@ const products = [
   {
     id: 6,
     name: "Software Engineering",
-    href: "#",
+    href: " ",
     price: "Tk 559",
     imageSrc: "https://i.ibb.co.com/vDs3qW9/Rectangle-2-5.png",
     imageAlt: "A book titled 'Refactoring' with a colorful cover.",
@@ -53,7 +53,7 @@ const products = [
   {
     id: 7,
     name: "Aws Basic ",
-    href: "#",
+    href: " ",
     price: "Tk 585",
     imageSrc: "https://i.ibb.co.com/xCySGL4/Rectangle-3-1.png",
     imageAlt: "A book titled 'Design Patterns' with a classic red cover.",
@@ -61,7 +61,7 @@ const products = [
   {
     id: 8,
     name: "Database Postgresql",
-    href: "#",
+    href: " ",
     price: "Tk 550",
     imageSrc: "https://i.ibb.co.com/M2PYC8x/Rectangle-2-1.png",
     imageAlt: "A book titled 'Refactoring' with a colorful cover.",

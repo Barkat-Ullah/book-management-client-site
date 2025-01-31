@@ -1,4 +1,3 @@
-"use client";
 
 import type React from "react";
 import { useEffect, useState } from "react";
@@ -31,7 +30,7 @@ export const CardStack: React.FC<CardStackProps> = ({
         newArray.unshift(newArray.pop()!);
         return newArray;
       });
-    }, 5000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
